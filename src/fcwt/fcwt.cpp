@@ -83,12 +83,12 @@ void Morlet::generate(float* real, float* imag, int size, float scale) {
     //cout << "]" << endl;
 }
 
-void Morlet::getWavelet(float scale, complex<float>* pwav, int pn) {
+void Morlet::getWavelet(float scale, std::complex<float>* pwav, int pn) {
     int w = getSupport(scale);
 
-    float *real = (float*)malloc(sizeof(float)*max(w*2+1,pn));
-    float *imag = (float*)malloc(sizeof(float)*max(w*2+1,pn));
-    for(int t=0; t < max(w*2+1,pn); t++) {
+    float *real = (float*)malloc(sizeof(float)*std::max(w*2+1,pn));
+    float *imag = (float*)malloc(sizeof(float)*std::max(w*2+1,pn));
+    for(int t=0; t < std::max(w*2+1,pn); t++) {
         real[t] = 0;
         imag[t] = 0;
     }
@@ -210,7 +210,7 @@ void FCWT::daughter_wavelet_multiplication(fftwf_complex *input, fftwf_complex *
         __m256 offset = _mm256_set_ps(3,3,2,2,1,1,0,0);
         __m256 maximum = _mm256_set1_ps(isizef-1);
         
-        int athreads = min(threads,max(1,endpoint4/16));
+        int athreads = std::min(threads,std::max(1,endpoint4/16));
         int batchsize = (endpoint4/athreads);
         int s4 = (isize>>2)-1;
 
@@ -274,7 +274,7 @@ void FCWT::daughter_wavelet_multiplication(fftwf_complex *input, fftwf_complex *
             }
         }
     #else
-        int athreads = min(threads,max(1,endpoint/16));
+        int athreads = std::min(threads,std::max(1,endpoint/16));
         int batchsize = (endpoint/athreads);
         float maximum = isizef-1;
         int s1 = isize-1;
@@ -288,7 +288,7 @@ void FCWT::daughter_wavelet_multiplication(fftwf_complex *input, fftwf_complex *
             
             for(int q1=start; q1<end; q1++) {
                 float q = (float)q1;
-                float tmp = min(maximum,step*q);
+                float tmp = std::min(maximum,step*q);
                 
                 output[q1][0] = input[q1][0]*mother[(int)tmp];
                 output[q1][1] = input[q1][1]*mother[(int)tmp]*(1-2*imaginary);
@@ -297,7 +297,7 @@ void FCWT::daughter_wavelet_multiplication(fftwf_complex *input, fftwf_complex *
             if(doublesided) {
                 for(int q1=start; q1<end; q1++) {
                     float q = (float)q1;
-                    float tmp = min(maximum,step*q);
+                    float tmp = std::min(maximum,step*q);
                     
                     output[s1-q1][0] = input[s1-q1][0]*mother[(int)tmp]*(1-2*imaginary);
                     output[s1-q1][1] = input[s1-q1][1]*mother[(int)tmp];
@@ -354,7 +354,7 @@ void FCWT::create_FFT_optimization_plan(int maxsize, int flags) {
         std::cout << "Optimization schemes for N: " << n << " have been calculated. Next time you use fCWT it will automatically choose the right optimization scheme based on number of threads and signal length." << std::endl;
     }
 }
-void FCWT::create_FFT_optimization_plan(int maxsize, string flags) {
+void FCWT::create_FFT_optimization_plan(int maxsize, std::string flags) {
     int flag = 0;
     
     if(flags == "FFTW_MEASURE") {
@@ -393,7 +393,7 @@ void FCWT::load_FFT_optimization_plan() {
 }
 
 //Convolve in time domain using a single wavelet
-void FCWT::convolve(fftwf_plan p, fftwf_complex *Ihat, fftwf_complex *O1, complex<float> *out, Wavelet *wav, int size, int newsize, float scale, bool lastscale) {
+void FCWT::convolve(fftwf_plan p, fftwf_complex *Ihat, fftwf_complex *O1, std::complex<float> *out, Wavelet *wav, int size, int newsize, float scale, bool lastscale) {
     
     if(lastscale) {
         #ifdef _WIN32
@@ -404,8 +404,8 @@ void FCWT::convolve(fftwf_plan p, fftwf_complex *Ihat, fftwf_complex *O1, comple
         memset(lastscalemem,0,sizeof(fftwf_complex)*newsize);
         
         fftbased(p, Ihat, O1, (float*)lastscalemem, wav->mother, newsize, scale, wav->imag_frequency, wav->doublesided);
-        if(use_normalization) fft_normalize((complex<float>*)lastscalemem, newsize);
-        memcpy(out, (complex<float>*)lastscalemem, sizeof(complex<float>)*size);
+        if(use_normalization) fft_normalize((std::complex<float>*)lastscalemem, newsize);
+        memcpy(out, (std::complex<float>*)lastscalemem, sizeof(std::complex<float>)*size);
     } else {
         if(!out) {
             std::cout << "OUT NOT A POINTER" << std::endl;
@@ -428,7 +428,7 @@ void FCWT::fftbased(fftwf_plan p, fftwf_complex *Ihat, fftwf_complex *O1, float 
     fftwf_execute_dft(p,O1,(fftwf_complex*)pt);
 }
 
-void FCWT::fft_normalize(complex<float>* out, int size) {
+void FCWT::fft_normalize(std::complex<float>* out, int size) {
 
     int nbatch = threads;
     int batchsize = (int)ceil((float)size/((float)threads));
@@ -436,7 +436,7 @@ void FCWT::fft_normalize(complex<float>* out, int size) {
     //#pragma omp parallel for
     for(int i=0; i<nbatch; i++) {
         int start = batchsize*i;
-        int end = min(size,batchsize*(i+1));
+        int end = std::min(size,batchsize*(i+1));
         
         for(int i8=start; i8<end; i8++) {
             out[i8] = out[i8] / (float)size;
@@ -444,7 +444,7 @@ void FCWT::fft_normalize(complex<float>* out, int size) {
     }
 }
 
-void FCWT::cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales, bool complexinput) {
+void FCWT::cwt(float *pinput, int psize, std::complex<float>* poutput, Scales *scales, bool complexinput) {
     
     fftwf_complex *Ihat, *O1;
     size = psize;
@@ -485,8 +485,8 @@ void FCWT::cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales
     // //Perform forward FFT on input signal
     float *input;
     if(complexinput) {
-        input = (float*)calloc(newsize,sizeof(complex<float>));
-        memcpy(input,pinput,sizeof(complex<float>)*size);
+        input = (float*)calloc(newsize,sizeof(std::complex<float>));
+        memcpy(input,pinput,sizeof(std::complex<float>)*size);
         p = fftwf_plan_dft_1d(newsize, (fftwf_complex*)input, Ihat, FFTW_FORWARD, FFTW_ESTIMATE);
     } else {
         input = (float*)malloc(newsize*sizeof(float));
@@ -509,7 +509,7 @@ void FCWT::cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales
         Ihat[newsize-i][1] = -Ihat[i][1];
     }
     
-    complex<float> *out = poutput;
+    std::complex<float> *out = poutput;
     
     for(int i = 0; i < scales->nscales; i++) {
         //FFT-base convolution in the frequency domain
@@ -529,20 +529,20 @@ void FCWT::cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales
 }
 
 
-void FCWT::cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales) {
+void FCWT::cwt(float *pinput, int psize, std::complex<float>* poutput, Scales *scales) {
     cwt(pinput,psize,poutput,scales,false);
 }
 
-void FCWT::cwt(complex<float> *pinput, int psize, complex<float>* poutput, Scales *scales) {
+void FCWT::cwt(std::complex<float> *pinput, int psize, std::complex<float>* poutput, Scales *scales) {
     cwt((float*)pinput,psize,poutput,scales,true);
 }
 
-void FCWT::cwt(float *pinput, int psize, Scales *scales, complex<float>* poutput, int pn1, int pn2) {
+void FCWT::cwt(float *pinput, int psize, Scales *scales, std::complex<float>* poutput, int pn1, int pn2) {
     assert((psize*scales->nscales) == (pn1*pn2));
     cwt(pinput,psize,poutput,scales);
 }
 
-void FCWT::cwt(complex<float> *pinput, int psize, Scales *scales, complex<float>* poutput, int pn1, int pn2) {
+void FCWT::cwt(std::complex<float> *pinput, int psize, Scales *scales, std::complex<float>* poutput, int pn1, int pn2) {
     assert((psize*scales->nscales) == (pn1*pn2));
     cwt(pinput,psize,poutput,scales);
 }

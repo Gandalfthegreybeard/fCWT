@@ -19,7 +19,7 @@ limitations under the License.
 
 #include "benchmark.h"
 
-using namespace std;
+#using namespace std;
 
 //Print CLI help text
 static void show_usage(std::string name)

@@ -3889,7 +3889,7 @@ SWIGINTERN PyObject *_wrap_Wavelet_getWavelet(PyObject *SWIGUNUSEDPARM(self), Py
   PyObject *resultobj = 0;
   Wavelet *arg1 = (Wavelet *) 0 ;
   float arg2 ;
-  complex< float > *arg3 = (complex< float > *) 0 ;
+  std::complex< float > *arg3 = (std::complex< float > *) 0 ;
   int arg4 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -3914,7 +3914,7 @@ SWIGINTERN PyObject *_wrap_Wavelet_getWavelet(PyObject *SWIGUNUSEDPARM(self), Py
     array3 = obj_to_array_no_conversion(swig_obj[2], NPY_CFLOAT);
     if (!array3 || !require_dimensions(array3,1) || !require_contiguous(array3)
       || !require_native(array3)) SWIG_fail;
-    arg3 = (complex<float>*) array_data(array3);
+    arg3 = (std::complex<float>*) array_data(array3);
     arg4 = 1;
     for (i3=0; i3 < array_numdims(array3); ++i3) arg4 *= array_size(array3,i3);
   }
@@ -4420,7 +4420,7 @@ SWIGINTERN PyObject *_wrap_Morlet_getWavelet(PyObject *SWIGUNUSEDPARM(self), PyO
   PyObject *resultobj = 0;
   Morlet *arg1 = (Morlet *) 0 ;
   float arg2 ;
-  complex< float > *arg3 = (complex< float > *) 0 ;
+  std::complex< float > *arg3 = (std::complex< float > *) 0 ;
   int arg4 ;
   void *argp1 = 0 ;
   int res1 = 0 ;
@@ -4445,7 +4445,7 @@ SWIGINTERN PyObject *_wrap_Morlet_getWavelet(PyObject *SWIGUNUSEDPARM(self), PyO
     array3 = obj_to_array_no_conversion(swig_obj[2], NPY_CFLOAT);
     if (!array3 || !require_dimensions(array3,1) || !require_contiguous(array3)
       || !require_native(array3)) SWIG_fail;
-    arg3 = (complex<float>*) array_data(array3);
+    arg3 = (std::complex<float>*) array_data(array3);
     arg4 = 1;
     for (i3=0; i3 < array_numdims(array3); ++i3) arg4 *= array_size(array3,i3);
   }
@@ -4965,7 +4965,7 @@ SWIGINTERN PyObject *_wrap_FCWT_cwt(PyObject *SWIGUNUSEDPARM(self), PyObject *ar
   float *arg2 = (float *) 0 ;
   int arg3 ;
   Scales *arg4 = (Scales *) 0 ;
-  complex< float > *arg5 = (complex< float > *) 0 ;
+  std::complex< float > *arg5 = (std::complex< float > *) 0 ;
   int arg6 ;
   int arg7 ;
   void *argp1 = 0 ;
@@ -5004,7 +5004,7 @@ SWIGINTERN PyObject *_wrap_FCWT_cwt(PyObject *SWIGUNUSEDPARM(self), PyObject *ar
     array5 = obj_to_array_no_conversion(swig_obj[3], NPY_CFLOAT);
     if (!array5 || !require_dimensions(array5,2) || !require_contiguous(array5)
       || !require_native(array5)) SWIG_fail;
-    arg5 = (complex<float>*) array_data(array5);
+    arg5 = (std::complex<float>*) array_data(array5);
     arg6 = (int) array_size(array5,0);
     arg7 = (int) array_size(array5,1);
   }
@@ -5031,10 +5031,10 @@ fail:
 SWIGINTERN PyObject *_wrap_FCWT_ccwt(PyObject *SWIGUNUSEDPARM(self), PyObject *args) {
   PyObject *resultobj = 0;
   FCWT *arg1 = (FCWT *) 0 ;
-  complex< float > *arg2 = (complex< float > *) 0 ;
+  std::complex< float > *arg2 = (std::complex< float > *) 0 ;
   int arg3 ;
   Scales *arg4 = (Scales *) 0 ;
-  complex< float > *arg5 = (complex< float > *) 0 ;
+  std::complex< float > *arg5 = (std::complex< float > *) 0 ;
   int arg6 ;
   int arg7 ;
   void *argp1 = 0 ;
@@ -5061,7 +5061,7 @@ SWIGINTERN PyObject *_wrap_FCWT_ccwt(PyObject *SWIGUNUSEDPARM(self), PyObject *a
       &is_new_object2);
     if (!array2 || !require_dimensions(array2, 1) ||
       !require_size(array2, size, 1)) SWIG_fail;
-    arg2 = (complex<float>*) array_data(array2);
+    arg2 = (std::complex<float>*) array_data(array2);
     arg3 = (int) array_size(array2,0);
   }
   res4 = SWIG_ConvertPtr(swig_obj[2], &argp4,SWIGTYPE_p_Scales, 0 |  0 );
@@ -5073,7 +5073,7 @@ SWIGINTERN PyObject *_wrap_FCWT_ccwt(PyObject *SWIGUNUSEDPARM(self), PyObject *a
     array5 = obj_to_array_no_conversion(swig_obj[3], NPY_CFLOAT);
     if (!array5 || !require_dimensions(array5,2) || !require_contiguous(array5)
       || !require_native(array5)) SWIG_fail;
-    arg5 = (complex<float>*) array_data(array5);
+    arg5 = (std::complex<float>*) array_data(array5);
     arg6 = (int) array_size(array5,0);
     arg7 = (int) array_size(array5,1);
   }

@@ -62,7 +62,7 @@ limitations under the License.
 #define sqrt2PI               2.50662827463100050241576528f
 #define IPI4                  0.75112554446f
 
-using namespace std;
+//using namespace std;
 
 enum SCALETYPE {FCWT_LINSCALES,FCWT_LOGSCALES,FCWT_LINFREQS};
 
@@ -72,7 +72,7 @@ public:
     virtual void generate(float* real, float* imag, int size, float scale) { printf("ERROR [generate time complex]: Override this virtual class"); };
     virtual void generate(int size) { printf("ERROR [generate freq]: Override this virtual class"); };
     virtual int getSupport(float scale) { printf("ERROR [getsupport]: Override this virtual class"); return 0; };
-    virtual void getWavelet(float scale, complex<float>* pwav, int pn) { printf("ERROR [getsupport]: Override this virtual class"); };
+    virtual void getWavelet(float scale, std::complex<float>* pwav, int pn) { printf("ERROR [getsupport]: Override this virtual class"); };
     
     int width;
     float four_wavelen;
@@ -88,7 +88,7 @@ public:
     void generate(int size); //frequency domain
     void generate(float* real, float* imag, int size, float scale); //time domain
     int getSupport(float scale) { return (int)(fb*scale*3.0f); };
-    void getWavelet(float scale, complex<float>* pwav, int pn);
+    void getWavelet(float scale, std::complex<float>* pwav, int pn);
     float fb;
     
 private:
@@ -122,23 +122,23 @@ public:
         use_normalization(puse_normalization) {};
 
     void FCWT_LIBRARY_API create_FFT_optimization_plan(int pmaxsize, int poptimizationflags);
-    void FCWT_LIBRARY_API create_FFT_optimization_plan(int pmaxsize, string poptimizationflags);
-    void FCWT_LIBRARY_API cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales);
-    void FCWT_LIBRARY_API cwt(complex<float> *pinput, int psize, complex<float>* poutput, Scales *scales);
-    void FCWT_LIBRARY_API cwt(float *pinput, int psize, Scales *scales, complex<float>* poutput, int pn1, int pn2);
-    void FCWT_LIBRARY_API cwt(complex<float> *pinput, int psize, Scales *scales, complex<float>* poutput, int pn1, int pn2);
+    void FCWT_LIBRARY_API create_FFT_optimization_plan(int pmaxsize, std::string poptimizationflags);
+    void FCWT_LIBRARY_API cwt(float *pinput, int psize, std::complex<float>* poutput, Scales *scales);
+    void FCWT_LIBRARY_API cwt(std::complex<float> *pinput, int psize, std::complex<float>* poutput, Scales *scales);
+    void FCWT_LIBRARY_API cwt(float *pinput, int psize, Scales *scales, std::complex<float>* poutput, int pn1, int pn2);
+    void FCWT_LIBRARY_API cwt(std::complex<float> *pinput, int psize, Scales *scales, std::complex<float>* poutput, int pn1, int pn2);
 
     Wavelet *wavelet;
     
 private:
-    void cwt(float *pinput, int psize, complex<float>* poutput, Scales *scales, bool complexinput);
+    void cwt(float *pinput, int psize, std::complex<float>* poutput, Scales *scales, bool complexinput);
     void cwt_static(float *pinput, int psize, float* poutput, float* scales);
     void cwt_dynamic(float *pinput, int psize, float* poutput, float* scales);
-    void convolve(fftwf_plan p, fftwf_complex *Ihat, fftwf_complex *O1, complex<float> *out, Wavelet *wav, int size, int newsize, float scale, bool lastscale);
-    void convolve(float* in, complex<float> *out, Wavelet *wav, float scale);
+    void convolve(fftwf_plan p, fftwf_complex *Ihat, fftwf_complex *O1, std::complex<float> *out, Wavelet *wav, int size, int newsize, float scale, bool lastscale);
+    void convolve(float* in, std::complex<float> *out, Wavelet *wav, float scale);
     void fftbased(fftwf_plan p, fftwf_complex *Ihat, fftwf_complex *O1, float *out, float* mother, int size, float scale, bool imaginary, bool doublesided);
     void firbased(float* in, float *out, Wavelet *wav, float scale);
-    void fft_normalize(complex<float>* out, int size);
+    void fft_normalize(std::complex<float>* out, int size);
     void main(float *Rinput,float *Routput);
     void load_FFT_optimization_plan();
     void daughter_wavelet_multiplication(fftwf_complex *input, fftwf_complex *output, float const *mother, float scale, int isize, bool imaginary, bool doublesided);
