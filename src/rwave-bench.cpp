@@ -8,6 +8,7 @@
  ***************************************************************/
 
 #include "benchmark.h"
+#include <cstring>
 
 namespace rwave {
     
@@ -82,7 +83,7 @@ namespace rwave {
         newsize = 1 << nt;
         
         tmp = (double *)malloc(newsize * 2 * sizeof(double));
-        memset(tmp,0,newsize * 2 * sizeof(double));
+	memset(tmp,0,newsize * 2 * sizeof(double));
         
         for(i = 0; i < isize; i++) {
             tmp[2 * i] = Ir[i];
@@ -101,7 +102,7 @@ namespace rwave {
                 Oi[i] = tmp[2 * i + 1];
             }
         }
-        delete tmp;
+        free(tmp);	//delete tmp;
     }
 
     void multi(double *Ri1, double *Ii1, double *Ri2, double *Or,
@@ -174,11 +175,11 @@ namespace rwave {
             }
         }
         
-        delete Ri;
-        delete Ii;
-        delete Ri2;
-        delete Ri1;
-        delete Ii1;
+        free(Ri);	//delete Ri;
+        free(Ii);	//delete Ii;
+        free(Ri2);	//delete Ri2;
+        free(Ri1);	//delete Ri1;
+        free(Ii1);	//delete Ii1;
     }
 
     void cwt(double *input, int defaultwindow, double *output, int pnboctave, int pnbvoice, int pinputsize) {
@@ -187,10 +188,10 @@ namespace rwave {
         int size = pinputsize;
         
         double *Iinput = (double*)malloc(sizeof(double)*size);
-        memset(Iinput,0,sizeof(double)*size);
+	memset(Iinput,0,sizeof(double)*size);
         
         Scwt_morlet(input, Iinput, &output[0], &output[size*pp], &pnboctave, &pnbvoice, &pinputsize, &defaultwindow, &w0);
         
-        delete Iinput;
+        free(Iinput);	//delete Iinput;
     }
 }
