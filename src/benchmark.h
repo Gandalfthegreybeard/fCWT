@@ -41,10 +41,14 @@ limitations under the License.
     #define AVX
 #endif
 
-#using namespace std;
+//using namespace std;
 #include <wavelib.h>
 
-#include "fcwt/fcwt.h"
+#include "fcwt/api.h"
+#include "fcwt/wavelet.h"
+#include "fcwt/morlet.h"
+#include "fcwt/scales.h"
+
 #include "rwave-bench.h"
 #include "wavelib-bench.h"
 

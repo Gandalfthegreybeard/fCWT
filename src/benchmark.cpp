@@ -19,7 +19,7 @@ limitations under the License.
 
 #include "benchmark.h"
 
-#using namespace std;
+//using namespace std;
 
 //Print CLI help text
 static void show_usage(std::string name)
@@ -40,7 +40,7 @@ static void show_usage(std::string name)
 }
 
 //Calculate and print mean and variance of times array
-static void show_stats(chrono::duration<double> *times, int runs)
+static void show_stats(std::chrono::duration<double> *times, int runs)
 {
     double total = 0.0;
     double mean = 0.0;
@@ -54,25 +54,25 @@ static void show_stats(chrono::duration<double> *times, int runs)
     for(int i=0; i<runs; i++) {
         total += (times[i].count() - mean)*(times[i].count() - mean);
     }
-    std = sqrt(total/(runs-1));
+    std = std::sqrt(total/(runs-1));
 
-    cout << " | elapsed avg time: " << mean << "s (sd: " << std << "s) on " << runs << " runs\n";
+    std::cout << " | elapsed avg time: " << mean << "s (sd: " << std << "s) on " << runs << " runs\n";
     
-    cout << "[";
+    std::cout << "[";
     for(int i=0; i<runs; i++) {
-        cout << times[i].count() << ",";
+	    std::cout << times[i].count() << ",";
     }
-    cout << "]\n";
+    std::cout << "]\n";
 }
 
 
 int main(int argc, char * argv[]) {
     
     //Initialize variables with default values
-    string algorithm = "";
+    std::string algorithm = "";
     int size = 1000;
     int nthreads = 8;
-    string optimization = "";
+    std::string optimization = "";
     
     //If user requests help
     if ((argv[1] == "-h") || (argv[1] == "--help")) {
@@ -86,19 +86,19 @@ int main(int argc, char * argv[]) {
         return 0;
     }
     
-    regex numberregex("^[0-9]+$");
-    regex letterregex("^-[a-zA-Z]+$");
+    std::__cxx11::regex numberregex("^[0-9]+$");
+    std::__cxx11::regex letterregex("^-[a-zA-Z]+$");
     
     //Check algorithm, number of samples and number of threads
     if(regex_match(argv[1], letterregex) && regex_match(argv[2], numberregex) && regex_match(argv[3], numberregex)) {
         algorithm = argv[1];
-        size = stoi(argv[2]);
-        nthreads = stoi(argv[3]);
-        cout << "Algorithm: " << algorithm << endl;
-        cout << "Number of samples: " << size << endl;
-        cout << "Number of threads: " << nthreads << endl;
+        size = std::__cxx11::stoi(argv[2]);
+        nthreads = std::__cxx11::stoi(argv[3]);
+	std::cout << "Algorithm: " << algorithm << std::endl;
+	std::cout << "Number of samples: " << size << std::endl;
+	std::cout << "Number of threads: " << nthreads << std::endl;
     } else {
-        cerr << "ERROR: Please define the method, number of samples and number of threads correctly." <<  '\n';
+	    std::cerr << "ERROR: Please define the method, number of samples and number of threads correctly." <<  '\n';
         return 0;
     }
     
@@ -109,12 +109,12 @@ int main(int argc, char * argv[]) {
                 optimization = argv[4];
             } else {
                 optimization = "measure";
-                cout << "ERROR: No optimization method recognized, use -h to see which methods are available" <<  '\n';
+		std::cout << "ERROR: No optimization method recognized, use -h to see which methods are available" <<  '\n';
                 return 0;
             }
         } else {
             optimization = "measure";
-            cout << "ERROR: No optimization method defined, use -h to see which methods are available" <<  '\n';
+	    std::cout << "ERROR: No optimization method defined, use -h to see which methods are available" <<  '\n';
             return 0;
         }
     }
@@ -134,7 +134,7 @@ int main(int argc, char * argv[]) {
     float *sig1 = (float*)malloc(sizeof(float)*size);
     float *sig2 = (float*)malloc(sizeof(float)*size);
     float *sig3 = (float*)malloc(sizeof(float)*size);
-    std::vector<complex<float>> sigout(size*fn);
+    std::vector<std::complex<float>> sigout(size*fn);
     
     double *sig1d = (double*)malloc(sizeof(double)*size);
     double *sig2d = (double*)malloc(sizeof(double)*size);
@@ -143,8 +143,8 @@ int main(int argc, char * argv[]) {
     
     for(int i=0; i<size; i++) {
         //Sig1: dynamic sine wave with varying frequency from 1Hz-7Hz, sampling rate of 64Hz.
-        sig1[i] = cos((2.0*3.1415*(hz+((float)(7*i)/size)))*((float)i/(float)fs));
-        sig1d[i] = cos((2.0*3.1415*(hz+((double)(7*i)/size)))*((double)i/(float)fs));
+        sig1[i] = std::cos((2.0*3.1415*(hz+((float)(7*i)/size)))*((float)i/(float)fs));
+        sig1d[i] = std::cos((2.0*3.1415*(hz+((double)(7*i)/size)))*((double)i/(float)fs));
         
         //Sig2: random numbers between 0-10.
         sig2[i] = ((float)(rand() % 1000))/100.0;
@@ -155,18 +155,18 @@ int main(int argc, char * argv[]) {
         sig3d[i] = (i%10==0);
     }
     
-    auto start = chrono::high_resolution_clock::now();
-    auto finish = chrono::high_resolution_clock::now();
-    chrono::duration<double> elapsed;
+    auto start = std::chrono::high_resolution_clock::now();
+    auto finish = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double> elapsed;
 
     //Initialize timing array
-    chrono::duration<double> *times = (chrono::duration<double>*)malloc(sizeof(chrono::duration<double>)*runs);
+    std::chrono::duration<double> *times = (std::chrono::duration<double>*)malloc(sizeof(std::chrono::duration<double>)*runs);
     
 
     if(algorithm=="-fcwtoptimize") {
         
         //FCWT optimize
-        cout << "=========== OPTIMIZING FCWT ============" << endl;
+	    std::cout << "=========== OPTIMIZING FCWT ============" << std::endl;
         
         //Use FFTW_MEASURE for low-quality fast optimization
         //Use FFTW_PATIENT for mid-quality optimization
@@ -176,166 +176,166 @@ int main(int argc, char * argv[]) {
         
         if(optimization=="-estimate") {
             opt = FFTW_ESTIMATE;
-            cout << "Using very fast but low-quality optimization: FFTW_ESTIMATE" << endl;
+	    std::cout << "Using very fast but low-quality optimization: FFTW_ESTIMATE" << std::endl;
         }
         if(optimization=="-measure") {
             opt = FFTW_MEASURE;
-            cout << "Using fast but low-quality optimization: FFTW_MEASURE" << endl;
+	    std::cout << "Using fast but low-quality optimization: FFTW_MEASURE" << std::endl;
         }
         if(optimization=="-patient") {
             opt = FFTW_PATIENT;
-            cout << "Using slow but high-quality optimization: FFTW_PATIENT" << endl;
+	    std::cout << "Using slow but high-quality optimization: FFTW_PATIENT" << std::endl;
         }
         if(optimization=="-exhaustive") {
             opt = FFTW_EXHAUSTIVE;
-            cout << "Using very slow but very high-quality optimization: FFTW_EXHAUSTIVE" << endl;
+	    std::cout << "Using very slow but very high-quality optimization: FFTW_EXHAUSTIVE" << std::endl;
         }
         
-        Wavelet *wavelet;
-        Morlet morl(1.0f);
+        fcwt::Wavelet *wavelet;
+	fcwt::Morlet morl(1.0f);
         wavelet = &morl;
-        FCWT fcwt(wavelet, nthreads, true, false);
+	fcwt::API fcwt(wavelet, nthreads, true, false);
 
         fcwt.create_FFT_optimization_plan(size,opt);
         
-        cout << "=========== OPTIMIZING END ============" << endl;
+	std::cout << "=========== OPTIMIZING END ============" << std::endl;
     }
     if(algorithm=="-fcwt") {
         
-        cout << "=========== BENCHMARKING FCWT ============" << endl;
+	    std::cout << "=========== BENCHMARKING FCWT ============" << std::endl;
         //FCWT sig1
-        cout << "----- First test -----" << endl;
-        cout << "Testing with sig1: dynamic sine wave (1Hz-7Hz)" << endl;
-        cout << "Sample sig1: [";
+	std::cout << "----- First test -----" << std::endl;
+	std::cout << "Testing with sig1: dynamic sine wave (1Hz-7Hz)" << std::endl;
+	std::cout << "Sample sig1: [";
         for(int n=0; n< 10; n++) {
-            cout << sig1[n] << ",";
+		std::cout << sig1[n] << ",";
         }
-        cout << "...]" << endl;
+	std::cout << "...]" << std::endl;
 
-        Wavelet *wavelet;
-        Morlet morl(1.0f);
+        fcwt::Wavelet *wavelet;
+	fcwt::Morlet morl(1.0f);
 
         wavelet = &morl;
-        FCWT fcwt(wavelet, nthreads, true, false);
-        Scales scs(wavelet, FCWT_LOGSCALES, fs, f0, f1, fn);
+	fcwt::API fcwt(wavelet, nthreads, true, false);
+        fcwt::Scales scs(fcwt::ScaleType::FCWT_LOGSCALES, fs, f0, f1, fn);
         
         for(int k=0; k<runs; k++) {
-            cout << ".";
+		std::cout << ".";
             
-            start = chrono::high_resolution_clock::now();
+            start = std::chrono::high_resolution_clock::now();
             
             fcwt.cwt(sig1, size, &sigout[0], &scs);
             
-            finish = chrono::high_resolution_clock::now();
+            finish = std::chrono::high_resolution_clock::now();
             times[k] = finish - start;
             
-            this_thread::sleep_for(chrono::microseconds(10000000));
+	    std::this_thread::sleep_for(std::chrono::microseconds(10000000));
 
         }
-        cout << endl;
-        cout << algorithm << " on sig1 with length N: " << size;
+	std::cout << std::endl;
+	std::cout << algorithm << " on sig1 with length N: " << size;
         show_stats(times,runs);
         
         
         //FCWT sig2
-        cout << "----- Second test -----" << endl;
-        cout << "Testing with sig2: random floats between 0-10" << endl;
-        cout << "Sample sig2: [";
+	std::cout << "----- Second test -----" << std::endl;
+	std::cout << "Testing with sig2: random floats between 0-10" << std::endl;
+	std::cout << "Sample sig2: [";
         for(int n=0; n< 10; n++) {
-            cout << sig2[n] << ",";
+		std::cout << sig2[n] << ",";
         }
-        cout << "...]" << endl;
+	std::cout << "...]" << std::endl;
         
         for(int k=0; k<runs; k++) {
-            cout << ".";
-            start = chrono::high_resolution_clock::now();
+		std::cout << ".";
+            start = std::chrono::high_resolution_clock::now();
 
             fcwt.cwt(sig2, size, &sigout[0], &scs);
 
-            finish = chrono::high_resolution_clock::now();
+            finish = std::chrono::high_resolution_clock::now();
             times[k] = finish - start;
             
-            this_thread::sleep_for(chrono::microseconds(10000000));
+	    std::this_thread::sleep_for(std::chrono::microseconds(10000000));
         }
-        cout << endl;
-        cout << algorithm << " on sig2 with length N: " << size;
+	std::cout << std::endl;
+	std::cout << algorithm << " on sig2 with length N: " << size;
         show_stats(times,runs);
         
         
         //FCWT sig3
-        cout << "----- Third test -----" << endl;
-        cout << "Testing with sig3: Repeating non-smooth function (x%10==0)" << endl;
-        cout << "Sample sig3: [";
+	std::cout << "----- Third test -----" << std::endl;
+	std::cout << "Testing with sig3: Repeating non-smooth function (x%10==0)" << std::endl;
+	std::cout << "Sample sig3: [";
         for(int n=0; n< 15; n++) {
-            cout << sig3[n] << ",";
+		std::cout << sig3[n] << ",";
         }
-        cout << "...]" << endl;
+	std::cout << "...]" << std::endl;
         
         for(int k=0; k<runs; k++) {
-            cout << ".";
-            start = chrono::high_resolution_clock::now();
+		std::cout << ".";
+            start = std::chrono::high_resolution_clock::now();
 
             fcwt.cwt(sig3, size, &sigout[0], &scs);
 
-            finish = chrono::high_resolution_clock::now();
+            finish = std::chrono::high_resolution_clock::now();
             times[k] = finish - start;
             
-            this_thread::sleep_for(chrono::microseconds(10000000));
+	    std::this_thread::sleep_for(std::chrono::microseconds(10000000));
         }
-        cout << endl;
-        cout << algorithm << " on sig3 with length N: " << size;
+	std::cout << std::endl;
+	std::cout << algorithm << " on sig3 with length N: " << size;
         show_stats(times,runs);
         
-        cout << "=========== BENCHMARKING END ============" << endl;
+	std::cout << "=========== BENCHMARKING END ============" << std::endl;
     }
     if(algorithm=="-rwave") {
         
         //RWAVE
-        cout << "=========== BENCHMARKING RWAVE ============" << endl;
+	    std::cout << "=========== BENCHMARKING RWAVE ============" << std::endl;
         for(int k=0; k<runs; k++) {
-            cout << ".";
-            start = chrono::high_resolution_clock::now();
+		std::cout << ".";
+            start = std::chrono::high_resolution_clock::now();
 
             rwave::cwt(sig1d, size, sigoutd, noct, nvoi, size);
 
-            finish = chrono::high_resolution_clock::now();
+            finish = std::chrono::high_resolution_clock::now();
             times[k] = finish - start;
             
-            this_thread::sleep_for(chrono::microseconds(10000000));
+	    std::this_thread::sleep_for(std::chrono::microseconds(10000000));
         }
-        cout << endl;
-        cout << algorithm << " on sig1 with length N: " << size;
+	std::cout << std::endl;
+	std::cout << algorithm << " on sig1 with length N: " << size;
         show_stats(times,runs);
     }
     if(algorithm=="-wavelib") {
         
         //WAVELIB
-        cout << "=========== BENCHMARKING WAVELIB ============" << endl;
+	    std::cout << "=========== BENCHMARKING WAVELIB ============" << std::endl;
         for(int k=0; k<runs; k++) {
-            cout << ".";
-            start = chrono::high_resolution_clock::now();
+		std::cout << ".";
+            start = std::chrono::high_resolution_clock::now();
 
-            cwt(sig1d, nvoi, noct, size);
+	    cwt(sig1d, nvoi, noct, size);
 
-            finish = chrono::high_resolution_clock::now();
+            finish = std::chrono::high_resolution_clock::now();
             times[k] = finish - start;
-            cout << times[k].count();
+	    std::cout << times[k].count();
             
-            this_thread::sleep_for(chrono::microseconds(10000000));
+	    std::this_thread::sleep_for(std::chrono::microseconds(10000000));
         }
-        cout << endl;
-        cout << algorithm << " on sig1 with length N: " << size;
+	std::cout << std::endl;
+	std::cout << algorithm << " on sig1 with length N: " << size;
         show_stats(times,runs);
     }
     
-    delete sig1;
-    delete sig2;
-    delete sig3;
-    delete sig1d;
-    delete sig2d;
-    delete sig3d;
-    delete sigoutd;
-    delete times;
+    free(sig1); 	// delete sig1;
+    free(sig2);	//delete sig2;
+    free(sig3);	//delete sig3;
+    free(sig1d);	//delete sig1d;
+    free(sig2d);	//delete sig2d;
+    free(sig3d);	//delete sig3d;
+    free(sigoutd);	//delete sigoutd;
+    free(times);	//delete times;
     
     return 0;
 }
