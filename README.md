@@ -11,6 +11,11 @@ The fast Continuous Wavelet Transform (fCWT) is a highly optimized C++ library f
 _Please cite our research paper using the sidebar button when using fCWT in your research project._
 > Arts, L.P.A., van den Broek, E.L. The fast continuous wavelet transformation (fCWT) for real-time, high-quality, noise-resistant time–frequency analysis. _Nat Comput Sci_ **2**, 47–58 (2022). https://doi.org/10.1038/s43588-021-00183-z
 
+UPDATE (12-27-2025)
+===================
+Merged in bilaljo's suggested changes to update to modern C++ v20 and fixed benchmark to work with the new style and seperate the classes.
+Will continue work to update code to handle CPython freethreading aka 3.14, and NumPy 2.0, and hopefully implement a RISCV RVV 1.0 acceleration.
+
 UPDATE (12-01-2023)
 ===================
 
