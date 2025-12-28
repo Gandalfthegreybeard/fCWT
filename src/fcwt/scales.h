@@ -1,4 +1,4 @@
-ifndef SCALES_H
+#ifndef SCALES_H
 #define SCALES_H
 
 #include "wavelet.h"

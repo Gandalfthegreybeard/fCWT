@@ -4,7 +4,6 @@
 #include <algorithm>
 #include <iostream>
 
-
 fcwt::Scales::Scales(const ScaleType st, const int fs, const float f0, const float f1, const int fn): fs(fs), nscales(fn)  {
     scales.resize(fn);
     switch(st) {
