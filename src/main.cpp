@@ -19,7 +19,7 @@ limitations under the License.
 
 #include "main.h"
 
-#using namespace std;
+//using namespace std;
 
 int main(int argc, char * argv[]) {
     
@@ -39,30 +39,30 @@ int main(int argc, char * argv[]) {
     std::vector<float> sig(n);
 
     //input: n complex numbers
-    std::vector<complex<float>> sigc(n);
+    std::vector<std::complex<float>> sigc(n);
     
     //output: n x scales x 2 (complex numbers consist of two parts)
-    std::vector<complex<float>> tfm(n*fn);
+    std::vector<std::complex<float>> tfm(n*fn);
     
     //initialize with 1 Hz cosine wave
     for(auto& el : sig) {
-        el = cos(twopi*((float)(&el - &sig[0])/(float)fs));
+        el = std::cos(twopi*(static_cast<float>(&el - &sig[0])/static_cast<float>(fs)));
     }
 
     //initialize with 1 Hz cosine wave
     for(auto& el : sigc) {
-        el = complex<float>(cos(twopi*((float)(&el - &sigc[0])/(float)fs)), 0.0f);
+        el = std::complex<float>(std::cos(twopi*((float)(&el - &sigc[0])/(float)fs)), 0.0f);
     }
     
     //Start timing
-    auto start = chrono::high_resolution_clock::now();
+    const auto start = std::chrono::high_resolution_clock::now();
     
     //Create a wavelet object
-    Wavelet *wavelet;
+    //Wavelet *wavelet;
     
     //Initialize a Morlet wavelet having sigma=1.0;
-    Morlet morl(1.0f);
-    wavelet = &morl;
+    fcwt::Morlet morl(1.0f);
+    fcwt::Wavelet *wavelet= &morl;
 
     //Other wavelets are also possible
     //DOG dog(int order); 
@@ -75,7 +75,8 @@ int main(int argc, char * argv[]) {
     //wavelet   - pointer to wavelet object
     //nthreads  - number of threads to use
     //optplan   - use FFTW optimization plans if true
-    FCWT fcwt(wavelet, nthreads, true, false);
+    //FCWT fcwt(wavelet, nthreads, true, false);
+    fcwt::API fcwt(wavelet, nthreads, true, false);
 
     //Generate frequencies
     //constructor(wavelet, dist, fs, f0, f1, fn)
@@ -87,7 +88,8 @@ int main(int argc, char * argv[]) {
     //f0        - beginning of frequency range
     //f1        - end of frequency range
     //fn        - number of wavelets to generate across frequency range
-    Scales scs(wavelet, FCWT_LINFREQS, fs, f0, f1, fn);
+    //Scales scs(wavelet, FCWT_LINFREQS, fs, f0, f1, fn);
+    fcwt::Scales scs(fcwt::ScaleType::FCWT_LINFREQS, fs, f0, f1, fn);
 
     //Perform a CWT
     //cwt(input, length, output, scales)
@@ -97,18 +99,19 @@ int main(int argc, char * argv[]) {
     //length    - integer signal length
     //output    - floating pointer to output array
     //scales    - pointer to scales object
-    fcwt.cwt(&sigc[0], n, &tfm[0], &scs);
+    //fcwt.cwt(&sigc[0], n, &tfm[0], &scs);
+    fcwt.cwt(sigc.data(), n, tfm.data(), &scs);
         
     //End timing
-    auto finish = chrono::high_resolution_clock::now();
+    const auto finish = std::chrono::high_resolution_clock::now();
 
     //Calculate total duration
-    chrono::duration<double> elapsed = finish - start;
+    const std::chrono::duration<double> elapsed = finish - start;
     
-    cout << "=== fCWT example ===" << endl;
-    cout << "Calculate CWT of a 100k sample sinusodial signal using a [" << f0 << "-" << f1 << "] Hz linear frequency range and " << fn << " wavelets." << endl;
-    cout << "====================" << endl;
-    cout << "fCWT finished in " << elapsed.count() << "s" << endl;
+    std::cout << "=== fCWT example ===" << std::endl;
+    std::cout << "Calculate CWT of a 100k sample sinusodial signal using a [" << f0 << "-" << f1 << "] Hz linear frequency range and " << fn << " wavelets." << std::endl;
+    std::cout << "====================" << std::endl;
+    std::cout << "fCWT finished in " << elapsed.count() << "s" << std::endl;
 
     return 0;
 }
