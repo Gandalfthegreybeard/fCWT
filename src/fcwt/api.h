@@ -67,11 +67,11 @@ namespace fcwt {
 
         void FCWT_LIBRARY_API create_FFT_optimization_plan(int maxsize, int flags) const;
         void FCWT_LIBRARY_API create_FFT_optimization_plan(int pmaxsize, std::string poptimizationflags);
-        void FCWT_LIBRARY_API cwt(float *pinput, int psize, std::complex<float>* poutput, Scales *scales);
-        void FCWT_LIBRARY_API cwt(std::complex<float> *pinput, int psize, std::complex<float>* poutput, Scales *scales);
-        void FCWT_LIBRARY_API cwt(float *pinput, int psize, Scales *scales, std::complex<float>* poutput, int pn1, int pn2);
-        void FCWT_LIBRARY_API cwt(float *pinput, int psize, std::complex<float>* poutput, Scales *scales, bool complexinput);
-        void FCWT_LIBRARY_API cwt(std::complex<float> *pinput, int psize, Scales* scales, std::complex<float>* poutput, int pn1, int pn2);
+        void FCWT_LIBRARY_API cwt(float const *pinput, int psize, std::complex<float>* poutput, Scales *scales);
+        void FCWT_LIBRARY_API cwt(std::complex<float> const *pinput, int psize, std::complex<float>* poutput, Scales *scales);
+        void FCWT_LIBRARY_API cwt(float const *pinput, int psize, Scales *scales, std::complex<float>* poutput, int pn1, int pn2);
+        void FCWT_LIBRARY_API cwt(float const *pinput, int psize, std::complex<float>* poutput, Scales *scales, bool complexinput);
+        void FCWT_LIBRARY_API cwt(std::complex<float> const *pinput, int psize, Scales* scales, std::complex<float>* poutput, int pn1, int pn2);
         Wavelet *wavelet;
 
         private:

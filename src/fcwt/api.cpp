@@ -119,7 +119,7 @@ void fcwt::API::daughter_wavelet_multiplication(fftwf_complex *input, fftwf_comp
             }
         }
     #else
-        int athreads = min(threads,max(1,endpoint/16));
+        int athreads = std::min(threads,std::max(1,endpoint/16));
         int batchsize = (endpoint/athreads);
         float maximum = isizef-1;
         int s1 = isize-1;
@@ -133,7 +133,7 @@ void fcwt::API::daughter_wavelet_multiplication(fftwf_complex *input, fftwf_comp
 
             for(int q1=start; q1<end; q1++) {
                 float q = (float)q1;
-                float tmp = min(maximum,step*q);
+                float tmp = std::min(maximum,step*q);
 
                 output[q1][0] = input[q1][0]*mother[(int)tmp];
                 output[q1][1] = input[q1][1]*mother[(int)tmp]*(1-2*imaginary);
@@ -142,7 +142,7 @@ void fcwt::API::daughter_wavelet_multiplication(fftwf_complex *input, fftwf_comp
             if(doublesided) {
                 for(int q1=start; q1<end; q1++) {
                     float q = (float)q1;
-                    float tmp = min(maximum,step*q);
+                    float tmp = std::min(maximum,step*q);
 
                     output[s1-q1][0] = input[s1-q1][0]*mother[(int)tmp]*(1-2*imaginary);
                     output[s1-q1][1] = input[s1-q1][1]*mother[(int)tmp];
@@ -282,7 +282,7 @@ void fcwt::API::fft_normalize(std::complex<float>* out, int size) {
     }
 }
 
-void fcwt::API::cwt(float *pinput, int psize, std::complex<float>* poutput, Scales *scales, bool complexinput) {
+void fcwt::API::cwt(float const *pinput, int psize, std::complex<float>* poutput, Scales *scales, bool complexinput) {
 
     fftwf_complex *Ihat, *O1;
     size = psize;
@@ -366,20 +366,20 @@ void fcwt::API::cwt(float *pinput, int psize, std::complex<float>* poutput, Scal
     #endif
 }
 
-void fcwt::API::cwt(float *pinput, int psize, std::complex<float>* poutput, Scales *scales) {
+void fcwt::API::cwt(float const *pinput, int psize, std::complex<float>* poutput, Scales *scales) {
     cwt(pinput,psize,poutput,scales,false);
 }
 
-void fcwt::API::cwt(std::complex<float> *pinput, int psize, std::complex<float>* poutput, Scales *scales) {
+void fcwt::API::cwt(std::complex<float> const *pinput, int psize, std::complex<float>* poutput, Scales *scales) {
     cwt((float*)pinput,psize,poutput,scales,true);
 }
 
-void fcwt::API::cwt(float *pinput, int psize, Scales *scales, std::complex<float>* poutput, int pn1, int pn2) {
+void fcwt::API::cwt(float const *pinput, int psize, Scales *scales, std::complex<float>* poutput, int pn1, int pn2) {
     assert((psize*scales->nscales) == (pn1*pn2));
     cwt(pinput,psize,poutput,scales);
 }
 
-void fcwt::API::cwt(std::complex<float> *pinput, int psize, Scales* scales, std::complex<float>* poutput, int pn1, int pn2) {
+void fcwt::API::cwt(std::complex<float> const *pinput, int psize, Scales* scales, std::complex<float>* poutput, int pn1, int pn2) {
     assert((psize*scales->nscales) == (pn1*pn2));
     cwt(pinput,psize,poutput,scales);
 }
