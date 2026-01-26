@@ -42,6 +42,7 @@ namespace fcwt {
 
 
         private:
+        // ifb = 1/fb ; fb2 = 2*fb^2
         float ifb, fb2;
     };
 }
